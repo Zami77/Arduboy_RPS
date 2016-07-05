@@ -1,33 +1,14 @@
 /*
  * RPS Demo 
  * July 4, 2016
- * Dan Lungaro
+ * Code by Dan Lungaro
+ * Graphics by L. Torrecilla
  */
 #include "Arduboy.h"
-
-#define ROCK 1
-#define PAPER 2
-#define SCISSORS 3
-
-#define MAIN_MENU 0
-#define STATS 1
-#define MATCH 2
-#define END_MATCH 3
-
-
-#define MAIN_MENU_PLAY 0
-#define MAIN_MENU_STATS 1
+#include "Gfx.h"
+#include "globals.h"
 
 Arduboy arduboy;
-
-//Variables here
-byte x,y;
-byte curChoice = 0;
-byte enemyChoice = 0;
-byte win = 0,loss = 0,tie = 0;
-bool winBool = false,lossBool = false, tieBool = false;
-byte menuChoice = MAIN_MENU_PLAY;
-byte GAME_STATE = 0;
 
 void setup() {
   // put your setup code here, to run once:
@@ -45,7 +26,7 @@ void loop() {
   if (!(arduboy.nextFrame())) return;
 
   arduboy.clear();
-  arduboy.setCursor(x,y);
+  
   if(GAME_STATE == MAIN_MENU)
   {
     doMenu();
@@ -59,6 +40,8 @@ void loop() {
 
   else if(GAME_STATE == END_MATCH)
   {
+    y = 40;
+    arduboy.setCursor(x,y);
     endMatch();
   }
   else if(GAME_STATE == STATS)
@@ -66,6 +49,7 @@ void loop() {
     doStats();
   }
   
+  arduboy.setCursor(x,y);
   arduboy.display();
 }
 
@@ -83,30 +67,10 @@ void doMatch()
   {
     curChoice = SCISSORS;
   }
-  /*if (arduboy.pressed(DOWN_BUTTON))
-  {
-    GAME_STATE = MAIN_MENU;
-  }
-  */
-  arduboy.print("PLAYER: ");
-  switch(curChoice)
-  {
-    case(ROCK):
-    {
-      arduboy.print("Rock");
-      break;
-    }
-    case(PAPER):
-    {
-      arduboy.print("Paper");
-      break;
-    }
-    case(SCISSORS):
-    {
-      arduboy.print("Scissors");
-      break;
-    }
-  }
+  arduboy.print("PLAYER:");
+  printMove(curChoice);
+  drawHand(30,30,curChoice);
+  
   if((arduboy.pressed(A_BUTTON) || arduboy.pressed(B_BUTTON)) && (curChoice != 0))
   {
     getEnemyChoice();
@@ -117,64 +81,30 @@ void doMatch()
 
 void endMatch()
 {
-  arduboy.print("PLAYER:");
-  printMove(curChoice);
-  arduboy.print("ENEMY:");
-  printMove(enemyChoice);
-  switch(curChoice)
-  {
-    case (ROCK):
-    {
-      if(enemyChoice == ROCK)
-        tieMatch();
-      
-      else if(enemyChoice == PAPER)
-        lossMatch();
-      
-      else if(enemyChoice == SCISSORS)
-        winMatch();
+  //arduboy.print("PLAYER:");
+  //printMove(curChoice);
+  //arduboy.print("ENEMY:");
+  //printMove(enemyChoice);
+  
+  matchResult = (curChoice - enemyChoice + 3) % 3;
+  if(matchResult == 0)
+    tieMatch();
+  if(matchResult == 1)
+    winMatch();
+  if(matchResult == 2)
+    lossMatch();
 
-      break;
-    }
-    case (PAPER):
-    {
-      if(enemyChoice == ROCK)
-        winMatch();
-      
-      else if(enemyChoice == PAPER)
-        tieMatch();
-      
-      else if(enemyChoice == SCISSORS)
-        lossMatch();
-      break;
-    }
-    case (SCISSORS):
-    {
-      if(enemyChoice == ROCK)
-        lossMatch();
-      
-      else if(enemyChoice == PAPER)
-        winMatch();
-      
-      else if(enemyChoice == SCISSORS)
-        tieMatch();
-      break;
-    }
-    default:
-      //do nothing
-      break;
-  }
   arduboy.println("Press UP for rematch\nPress Down to Stats");
 
   if(arduboy.pressed(UP_BUTTON))
   {
-    curChoice = 0;
-    enemyChoice = 0;
+    y = 0;
     addScore();
     GAME_STATE = MATCH;
   }
   if(arduboy.pressed(DOWN_BUTTON))
   {
+    y = 0;
     addScore();
     GAME_STATE = STATS;
   }
@@ -190,6 +120,8 @@ void addScore()
   winBool = false;
   lossBool = false;
   tieBool = false;
+  curChoice = 0;
+  enemyChoice = 0;
 }
 void tieMatch()
 {
@@ -225,6 +157,7 @@ void getEnemyChoice()
 {
   enemyChoice = random(1,4);
 }
+
 void doMenu()
 {
   if(menuChoice == MAIN_MENU_PLAY)
@@ -294,4 +227,29 @@ void doStats()
     GAME_STATE = MAIN_MENU;
   
 }
+
+void drawHand(byte x,byte y,byte hand)
+{
+  switch (hand)
+  {
+    case (ROCK):
+    {
+      arduboy.drawBitmap(x,y,rockGfx,16,16,WHITE);
+      break;
+    }
+    case (PAPER):
+    {
+      arduboy.drawBitmap(x,y,paperGfx,16,16,WHITE);
+      break;
+    }
+    case (SCISSORS):
+    {
+      arduboy.drawBitmap(x,y,scissorsGfx,16,16,WHITE);
+      break;
+    }
+    default:
+     break;
+  }
+}
+
 
