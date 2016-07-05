@@ -1,5 +1,5 @@
 /*
- * Test Demo 
+ * RPS Demo 
  * July 4, 2016
  * Dan Lungaro
  */
