@@ -12,10 +12,11 @@ Arduboy arduboy;
 
 void setup() {
   // put your setup code here, to run once:
+  
   arduboy.begin();
   arduboy.setFrameRate(15);
   arduboy.initRandomSeed();
-  
+
   x = 0;
   y = 0;
 
@@ -50,6 +51,7 @@ void loop() {
   }
   
   arduboy.setCursor(x,y);
+  arduboy.invert(invertGFX);
   arduboy.display();
 }
 
@@ -73,7 +75,7 @@ void doMatch()
   
   if((arduboy.pressed(A_BUTTON) || arduboy.pressed(B_BUTTON)) && (curChoice != 0))
   {
-    arduboy.tunes.tone(175,100);
+    beep();
     getEnemyChoice();
     GAME_STATE = END_MATCH;
   }
@@ -167,20 +169,30 @@ void doMenu()
   {
     arduboy.println("->Play Game");
     arduboy.println("Stats");
+    arduboy.println("Invert Graphics");
   }
   if(menuChoice == MAIN_MENU_STATS)
   {
     arduboy.println("Play Game");
     arduboy.println("->Stats");
+    arduboy.println("Invert Graphics");
+
+  }
+  if(menuChoice == MAIN_MENU_INVERT)
+  {
+    arduboy.println("Play Game");
+    arduboy.println("Stats");
+    arduboy.println("->Invert Graphics");
   }
 
   if(arduboy.pressed(DOWN_BUTTON))
   {
-    if(menuChoice >= 1){
+    if(menuChoice >= 2){
       //do nothing
       }
     else{
       menuChoice++;}
+    delay(125);
   }
   if(arduboy.pressed(UP_BUTTON))
   {
@@ -190,7 +202,7 @@ void doMenu()
     else{
       menuChoice--;
     }
-
+    delay(125);
   }
   
   
@@ -198,7 +210,7 @@ void doMenu()
   enemyChoice = 0;
   if (arduboy.pressed(A_BUTTON) || arduboy.pressed(B_BUTTON))
   {
-    
+    beep();
     switch (menuChoice)
     {
       case (MAIN_MENU_PLAY):
@@ -211,8 +223,17 @@ void doMenu()
         GAME_STATE = STATS;
         break;
       }
+      case (MAIN_MENU_INVERT):
+      {
+        invertGFX = !invertGFX;
+        GAME_STATE = MAIN_MENU;
+        break;
+      }
+      default:
+        break;
     }
     menuChoice = MAIN_MENU_PLAY;
+    delay(125);
   }
 }
 
@@ -253,6 +274,11 @@ void drawHand(byte x,byte y,byte hand)
     default:
      break;
   }
+}
+
+void beep()
+{
+  arduboy.tunes.tone(440,100);
 }
 
 

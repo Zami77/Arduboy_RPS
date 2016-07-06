@@ -10,6 +10,7 @@
 
 #define MAIN_MENU_PLAY 0
 #define MAIN_MENU_STATS 1
+#define MAIN_MENU_INVERT 2
 
 byte x,y;
 byte curChoice = 0;
@@ -19,3 +20,4 @@ byte matchResult;
 bool winBool = false,lossBool = false, tieBool = false;
 byte menuChoice = MAIN_MENU_PLAY;
 byte GAME_STATE = 0;
+bool invertGFX = false;
