@@ -73,6 +73,7 @@ void doMatch()
   
   if((arduboy.pressed(A_BUTTON) || arduboy.pressed(B_BUTTON)) && (curChoice != 0))
   {
+    arduboy.tunes.tone(175,100);
     getEnemyChoice();
     GAME_STATE = END_MATCH;
   }
@@ -94,7 +95,9 @@ void endMatch()
   if(matchResult == 2)
     lossMatch();
 
-  arduboy.println("Press UP for rematch\nPress Down to Stats");
+  drawHand(26,5,curChoice);
+  drawHand(92,5,enemyChoice);
+  arduboy.println("Press UP for rematch\nPress Down for Stats");
 
   if(arduboy.pressed(UP_BUTTON))
   {
