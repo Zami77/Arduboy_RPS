@@ -25,11 +25,12 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   if (!(arduboy.nextFrame())) return;
-
+  //x = 0, y = 0;
   arduboy.clear();
   
   if(GAME_STATE == MAIN_MENU)
   {
+    
     doMenu();
   }
   
@@ -41,7 +42,7 @@ void loop() {
 
   else if(GAME_STATE == END_MATCH)
   {
-    y = 40;
+    x = 0,y = 45;
     arduboy.setCursor(x,y);
     endMatch();
   }
@@ -97,21 +98,24 @@ void endMatch()
   if(matchResult == 2)
     lossMatch();
 
-  drawHand(26,5,curChoice);
-  drawHand(92,5,enemyChoice);
-  arduboy.println("Press UP for rematch\nPress Down for Stats");
+  drawHand(16,8,curChoice);
+  drawHand(100,8,enemyChoice);
+  //arduboy.setCursor(0,y);
+  arduboy.println("Press UP for rematch\nPress Down for Menu");
 
   if(arduboy.pressed(UP_BUTTON))
   {
     y = 0;
     addScore();
     GAME_STATE = MATCH;
+    delay(125);
   }
   if(arduboy.pressed(DOWN_BUTTON))
   {
     y = 0;
     addScore();
-    GAME_STATE = STATS;
+    GAME_STATE = MAIN_MENU;
+    delay(125);
   }
 }
 void addScore()
@@ -131,17 +135,20 @@ void addScore()
 void tieMatch()
 {
   tieBool = true;
-  arduboy.println("It's a tie!");
+  arduboy.drawBitmap(42,8,tieGfx,48,24,WHITE);
+  //arduboy.println("It's a tie!");
 }
 void winMatch()
 {
   winBool = true;
-  arduboy.println("It's a win!");
+  arduboy.drawBitmap(42,8,winGfx,48,24,WHITE);
+  //arduboy.println("It's a win!");
 }
 void lossMatch()
 {
   lossBool = true;
-  arduboy.println("It's a loss...");
+  arduboy.drawBitmap(42,8,lossGfx,48,24,WHITE);
+  //arduboy.println("It's a loss...");
 }
 void printMove(byte moveChoice)
 {
@@ -165,24 +172,31 @@ void getEnemyChoice()
 
 void doMenu()
 {
+  x = 12,y = 6;
+  arduboy.setCursor(x,y);
+  arduboy.drawBitmap(0,0,menuGfx,128,64,WHITE);
   if(menuChoice == MAIN_MENU_PLAY)
   {
-    arduboy.println("->Play Game");
-    arduboy.println("Stats");
-    arduboy.println("Invert Graphics");
+    
+    arduboy.println("  Play Game");
+    arduboy.println("    Stats");
+    arduboy.println("    Invert");
+    arduboy.drawBitmap(7,5,menuSelectorGfx,16,16,WHITE);
   }
   if(menuChoice == MAIN_MENU_STATS)
   {
-    arduboy.println("Play Game");
-    arduboy.println("->Stats");
-    arduboy.println("Invert Graphics");
+    arduboy.println("  Play Game");
+    arduboy.println("    Stats");
+    arduboy.println("    Invert");
+    arduboy.drawBitmap(7,13,menuSelectorGfx,16,16,WHITE);
 
   }
   if(menuChoice == MAIN_MENU_INVERT)
   {
-    arduboy.println("Play Game");
-    arduboy.println("Stats");
-    arduboy.println("->Invert Graphics");
+    arduboy.println("  Play Game");
+    arduboy.println("    Stats");
+    arduboy.println("    Invert");
+    arduboy.drawBitmap(7,21,menuSelectorGfx,16,16,WHITE);
   }
 
   if(arduboy.pressed(DOWN_BUTTON))
@@ -232,7 +246,7 @@ void doMenu()
       default:
         break;
     }
-    menuChoice = MAIN_MENU_PLAY;
+    //menuChoice = MAIN_MENU_PLAY;
     delay(125);
   }
 }
