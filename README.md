@@ -1,3 +1,2 @@
 # Arduboy_RPS
-Basic rock,paper, scissors game for the arduboy
-when you have started a match use the left,up, and right buttons to select your choice, then press A or B to start the match.
+A simple Rock, Paper, Scissors game written in C for the Arduboy. This was a fun project I worked on and I'm appreciative of graphics created by Luis T.
